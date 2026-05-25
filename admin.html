@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAST Grocery Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="max-w-5xl mx-auto p-6">
+
+<h1 class="text-4xl font-bold text-green-600 mb-8">
+FAST Grocery Admin Panel
+</h1>
+
+<div id="loginBox" class="bg-white p-8 rounded-2xl shadow-lg">
+
+<h2 class="text-2xl font-bold mb-6">
+Admin Login
+</h2>
+
+<input
+type="email"
+id="email"
+placeholder="Admin Email"
+class="w-full border p-3 rounded-xl mb-4"
+/>
+
+<input
+type="password"
+id="password"
+placeholder="Password"
+class="w-full border p-3 rounded-xl mb-4"
+/>
+
+<button
+onclick="login()"
+class="bg-green-600 text-white px-6 py-3 rounded-xl w-full"
+>
+Login
+</button>
+
+</div>
+
+<div
+id="adminPanel"
+class="hidden bg-white p-8 rounded-2xl shadow-lg mt-10"
+>
+
+<h2 class="text-3xl font-bold mb-6 text-green-600">
+Product Management
+</h2>
+
+<input
+type="text"
+id="productName"
+placeholder="Product Name"
+class="w-full border p-3 rounded-xl mb-4"
+/>
+
+<input
+type="number"
+id="productPrice"
+placeholder="Product Price"
+class="w-full border p-3 rounded-xl mb-4"
+/>
+
+<input
+type="text"
+id="productImage"
+placeholder="Image URL"
+class="w-full border p-3 rounded-xl mb-4"
+/>
+
+<button
+onclick="addProduct()"
+class="bg-green-600 text-white px-6 py-3 rounded-xl"
+>
+Add Product
+</button>
+
+<div id="productList" class="mt-10 grid md:grid-cols-3 gap-6"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const ADMIN_EMAIL = "fastgrocery99@gmail.com";
+const ADMIN_PASSWORD = "Admin123";
+
+function login(){
+
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+if(email === ADMIN_EMAIL && password === ADMIN_PASSWORD){
+
+document.getElementById("loginBox").classList.add("hidden");
+
+document.getElementById("adminPanel").classList.remove("hidden");
+
+}else{
+
+alert("Wrong Email or Password");
+
+}
+
+}
+
+function addProduct(){
+
+const name = document.getElementById("productName").value;
+
+const price = document.getElementById("productPrice").value;
+
+const image = document.getElementById("productImage").value;
+
+const productHTML = `
+<div class="bg-gray-100 p-4 rounded-2xl">
+<img src="${image}" class="w-full h-40 object-cover rounded-xl">
+
+<h3 class="text-xl font-bold mt-4">
+${name}
+</h3>
+
+<p class="text-green-600 font-bold">
+৳${price}
+</p>
+</div>
+`;
+
+document.getElementById("productList").innerHTML += productHTML;
+
+}
+
+</script>
+
+</body>
+</html>
