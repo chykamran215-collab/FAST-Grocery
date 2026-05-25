@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FAST Grocery Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+// Firebase Config
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCbKukFkZYTp-a3CHCSp992GXRM9DTB65U",
+  authDomain: "fast-grocery-cecdd.firebaseapp.com",
+  databaseURL: "https://fast-grocery-cecdd-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "fast-grocery-cecdd",
+  storageBucket: "fast-grocery-cecdd.firebasestorage.app",
+  messagingSenderId: "1097213209050",
+  appId: "1:1097213209050:web:93c35dee77f4aff4a138e3",
+  measurementId: "G-H0J73RZMWS"
+};
+
+// Initialize Firebase
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();  
 <body class="bg-gray-100">
 
 <div class="max-w-5xl mx-auto p-6">
@@ -111,7 +132,66 @@ alert("Wrong Email or Password");
 
 }
 
-function addProduct(){
+async function addProduct(){
+  async function loadProducts(){
+
+  const productList =
+  document.getElementById("productList");
+
+  productList.innerHTML = "";
+
+  const snapshot =
+  await db.collection("products").get();
+
+  snapshot.forEach((doc)=>{
+
+    const product = doc.data();
+
+    productList.innerHTML += `
+
+      <div class="bg-gray-100 p-4 rounded-2xl">
+
+        <img src="${product.image}"
+        class="w-full h-40 object-cover rounded-xl">
+
+        <h3 class="text-xl font-bold mt-4">
+          ${product.name}
+        </h3>
+
+        <p class="text-green-600 font-bold">
+          ৳${product.price}
+        </p>
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+loadProducts();
+
+  const name =
+  document.getElementById("productName").value;
+
+  const price =
+  document.getElementById("productPrice").value;
+
+  const image =
+  document.getElementById("productImage").value;
+
+  await db.collection("products").add({
+
+    name:name,
+    price:price,
+    image:image
+
+  });
+
+  alert("Product Added Successfully");
+
+}
 
 const name = document.getElementById("productName").value;
 
