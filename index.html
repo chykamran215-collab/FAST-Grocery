@@ -1,114 +1,921 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAST Grocery</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-body{font-family:Arial,sans-serif;background:#f5fff5}
-.hero{background:linear-gradient(to right,#0f9d58,#34c759)}
-.card:hover{transform:translateY(-5px);transition:.3s}
-</style>
-</head>
-<body>
 
-<nav class="bg-green-600 text-white p-4 sticky top-0">
-<div class="max-w-7xl mx-auto flex justify-between">
-<h1 class="text-2xl font-bold">FAST Grocery</h1>
-<div class="hidden md:flex gap-5">
-<a href="#">Home</a>
-<a href="#">Products</a>
-<a href="#">Offers</a>
-  <a href="admin.html">Admin</a>
+<title>FAST_Grocery | দ্রুত গ্রোসারি শপ</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:'Hind Siliguri',sans-serif;
+scroll-behavior:smooth;
+transition:0.3s;
+}
+
+.dark-mode{
+background:#111827;
+color:white;
+}
+
+.hero{
+background:
+linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+url('https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1600&auto=format&fit=crop');
+
+background-size:cover;
+background-position:center;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 2rem;
+    max-width: 500px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 2rem 2rem 0 0;
+}
+
+.modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.cart-item-modal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.cart-item-modal:last-child {
+    border-bottom: none;
+}
+
+.cart-item-info h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.cart-item-info p {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.cart-item-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #10b981;
+}
+
+.price-summary {
+    background: #f3f4f6;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin: 1rem 0;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.price-row.total {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #10b981;
+    border-top: 2px solid #d1d5db;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.modal-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.btn-modal {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-checkout-modal {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.btn-checkout-modal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+.btn-checkout-modal:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.empty-cart-message {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.empty-cart-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Checkout Modal */
+.checkout-modal .modal-content {
+    max-width: 600px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.875rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.button-group button {
+    flex: 1;
+    padding: 0.875rem;
+    border: none;
+    border-radius: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel {
+    background: #f3f4f6;
+    color: #111827;
+    border: 2px solid #e5e7eb;
+}
+
+.btn-cancel:hover {
+    background: #e5e7eb;
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+/* Success Modal */
+.success-modal .modal-content {
+    text-align: center;
+    max-width: 450px;
+}
+
+.success-icon {
+    font-size: 4rem;
+    margin: 2rem 0 1rem;
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.success-modal h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #10b981;
+    margin-bottom: 0.5rem;
+}
+
+.success-modal p {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+.btn-whatsapp {
+    background: #25d366;
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-whatsapp:hover {
+    background: #20ba5a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(37, 211, 102, 0.3);
+}
+
+.product-card-animated {
+    animation: fadeInUp 0.6s ease;
+    animation-fill-mode: both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+</style>
+
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+<!-- NAVBAR -->
+
+<nav class="bg-green-600 text-white sticky top-0 z-40 shadow-lg">
+
+<div class="max-w-7xl mx-auto px-5 py-4 flex justify-between items-center flex-wrap gap-4">
+
+<h1 class="text-2xl font-bold">
+🛒 FAST_Grocery
+</h1>
+
+<div class="flex gap-3 flex-wrap">
+
+<button
+onclick="toggleDarkMode()"
+class="bg-black px-4 py-2 rounded-xl font-bold hover:bg-gray-800 transition">
+
+🌙 Dark
+
+</button>
+
+<button
+onclick="openCartModal()"
+class="bg-white text-green-700 px-4 py-2 rounded-xl font-bold hover:bg-gray-100 transition">
+
+🛒 View Cart:
+<span id="cart-count" class="ml-1 bg-red-600 text-white px-2 py-1 rounded-lg">0</span>
+
+</button>
+
 </div>
+
 </div>
+
 </nav>
 
-<section class="hero text-white py-16 px-6">
-<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center">
-<div>
-<h1 class="text-5xl font-bold">Fresh Grocery Delivered Fast</h1>
-<p class="mt-5 text-lg">Sylhet এর দ্রুততম অনলাইন গ্রোসারি সার্ভিস</p>
-<a href="https://wa.me/8801346234146" target="_blank">
-<button class="mt-8 bg-white text-green-700 px-6 py-3 rounded-xl font-bold">Order on WhatsApp</button>
+<!-- HERO -->
+
+<section class="hero min-h-screen flex items-center text-white">
+
+<div class="max-w-7xl mx-auto px-6">
+
+<h1 class="text-5xl md:text-7xl font-bold leading-tight mb-6">
+
+সিলেট শহরের দ্রুততম <br>
+অনলাইন গ্রোসারি শপ
+
+</h1>
+
+<p class="text-xl mb-8 max-w-2xl">
+
+তাজা চাল, তেল, ডাল এবং আরও অনেক কিছু। এখনই অর্ডার করুন দ্রুত ডেলিভারির জন্য!
+
+</p>
+
+<a
+href="#products"
+class="bg-green-500 hover:bg-green-700 px-8 py-4 rounded-xl text-lg font-bold inline-block transition transform hover:scale-105">
+
+📦 কেনাকাটা শুরু করুন
+
 </a>
+
 </div>
-<div>
-<img src="https://images.unsplash.com/photo-1542838132-92c53300491e" class="rounded-3xl shadow-2xl w-full h-[350px] object-cover">
-</div>
-</div>
+
 </section>
 
-<section class="max-w-7xl mx-auto py-12 px-6">
-<h2 class="text-3xl font-bold text-green-700 mb-8">Popular Products</h2>
+<!-- LIVE OFFERS -->
 
-<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<section class="bg-red-600 text-white py-4">
 
-<div class="bg-white rounded-3xl shadow-lg overflow-hidden card">
-<img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce" class="w-full h-52 object-cover">
-<div class="p-5">
-<h3 class="font-bold text-xl">Fresh Apple</h3>
-<p class="text-green-600 font-bold mt-2">৳220 / KG</p>
-<a href="https://wa.me/8801346234146?text=I%20want%20Fresh%20Apple">
-<button class="w-full mt-4 bg-green-600 text-white py-3 rounded-xl font-bold">Order Now</button>
-</a>
-</div>
-</div>
+<div class="max-w-7xl mx-auto px-6 text-center">
 
-<div class="bg-white rounded-3xl shadow-lg overflow-hidden card">
-<img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655" class="w-full h-52 object-cover">
-<div class="p-5">
-<h3 class="font-bold text-xl">Vegetables</h3>
-<p class="text-green-600 font-bold mt-2">৳120 / KG</p>
-<a href="https://wa.me/8801346234146?text=I%20want%20Vegetables">
-<button class="w-full mt-4 bg-green-600 text-white py-3 rounded-xl font-bold">Order Now</button>
-</a>
-</div>
-</div>
+<marquee class="text-xl font-bold">
 
-<div class="bg-white rounded-3xl shadow-lg overflow-hidden card">
-<img src="https://images.unsplash.com/photo-1586201375761-83865001e31c" class="w-full h-52 object-cover">
-<div class="p-5">
-<h3 class="font-bold text-xl">Premium Rice</h3>
-<p class="text-green-600 font-bold mt-2">৳80 / KG</p>
-<a href="https://wa.me/8801346234146?text=I%20want%20Premium%20Rice">
-<button class="w-full mt-4 bg-green-600 text-white py-3 rounded-xl font-bold">Order Now</button>
-</a>
-</div>
-</div>
+🔥 FAST_Grocery এ স্বাগতম - দ্রুত ডেলিভারি, সেরা দাম!
 
-<div class="bg-white rounded-3xl shadow-lg overflow-hidden card">
-<img src="https://images.unsplash.com/photo-1550583724-b2692b85b150" class="w-full h-52 object-cover">
-<div class="p-5">
-<h3 class="font-bold text-xl">Fresh Milk</h3>
-<p class="text-green-600 font-bold mt-2">৳110</p>
-<a href="https://wa.me/8801346234146?text=I%20want%20Fresh%20Milk">
-<button class="w-full mt-4 bg-green-600 text-white py-3 rounded-xl font-bold">Order Now</button>
-</a>
-</div>
-</div>
+</marquee>
 
 </div>
+
 </section>
 
-<footer class="bg-black text-white py-10">
-<div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
-<div>
-<h2 class="text-2xl font-bold text-green-500">FAST Grocery</h2>
-<p class="mt-4 text-gray-400">Sylhet Online Grocery Shop</p>
+<!-- PRODUCTS -->
+
+<section id="products" class="py-20">
+
+<div class="max-w-7xl mx-auto px-6">
+
+<div class="text-center mb-10">
+
+<h2 class="text-4xl font-bold text-green-700 mb-4">
+জনপ্রিয় পণ্যসমূহ
+</h2>
+
+<p class="text-gray-600">
+দ্রুত সেবার জন্য বেছে নিন আপনার পছন্দের পণ্য
+</p>
+
 </div>
-<div>
-<h3 class="text-xl font-bold mb-4">Contact</h3>
-<p>📞 01346234146</p>
-<p>📧 fastgrocery99@gmail.com</p>
+
+<!-- SEARCH -->
+
+<div class="mb-10">
+
+<input
+type="text"
+id="searchInput"
+placeholder="🔍 পণ্য খুঁজুন..."
+class="w-full border-2 border-green-300 rounded-2xl p-4 text-lg focus:outline-none focus:border-green-500 transition"
+onkeyup="searchProducts()"
+/>
+
 </div>
-<div>
-<h3 class="text-xl font-bold mb-4">Delivery</h3>
-<p>Fast delivery inside Sylhet City</p>
+
+<div
+id="productContainer"
+class="grid md:grid-cols-3 gap-8">
+
+<!-- Products will be inserted here -->
+
 </div>
+
 </div>
+
+</section>
+
+<!-- CONTACT FOOTER -->
+
+<section class="py-20 bg-green-50">
+
+<div class="max-w-5xl mx-auto px-6 text-center">
+
+<h2 class="text-4xl font-bold text-green-700 mb-8">
+যোগাযোগ করুন
+</h2>
+
+<div class="grid md:grid-cols-3 gap-8">
+
+<div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition">
+<h3 class="text-2xl font-bold mb-3">📱 Phone</h3>
+<p class="text-lg">01346234146</p>
+</div>
+
+<div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition">
+<h3 class="text-2xl font-bold mb-3">📧 Email</h3>
+<p class="text-lg">fastgrocery99@gmail.com</p>
+</div>
+
+<div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition">
+<h3 class="text-2xl font-bold mb-3">💸 bKash</h3>
+<p class="text-lg">01516325980</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer class="bg-green-700 text-white py-6 text-center">
+
+<p>
+©️ 2026 FAST_Grocery | সকল অধিকার সংরক্ষিত
+</p>
+
 </footer>
+
+<!-- ============ MODALS ============ -->
+
+<!-- CART MODAL -->
+<div id="cartModal" class="modal-overlay" onclick="closeCartModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="text-2xl font-bold">🛒 আপনার কার্ট</h2>
+            <button class="modal-close" onclick="closeCartModal()">✕</button>
+        </div>
+        <div class="modal-body" id="cartModalBody">
+            <div class="empty-cart-message">
+                <div class="empty-cart-icon">🛒</div>
+                <p>আপনার কার্ট খালি</p>
+            </div>
+        </div>
+        <div class="modal-footer" id="cartModalFooter">
+        </div>
+    </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div id="checkoutModal" class="modal-overlay checkout-modal" onclick="closeCheckoutModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="text-2xl font-bold">📦 অর্ডার তথ্য</h2>
+            <button class="modal-close" onclick="closeCheckoutModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="checkoutForm" onsubmit="submitOrder(event)">
+                <div class="form-group">
+                    <label for="checkoutName">আপনার নাম</label>
+                    <input type="text" id="checkoutName" required placeholder="যেমন: করিম আহমেদ">
+                </div>
+                <div class="form-group">
+                    <label for="checkoutPhone">মোবাইল নাম্বর</label>
+                    <input type="tel" id="checkoutPhone" required placeholder="যেমন: 01700000000">
+                </div>
+                <div class="form-group">
+                    <label for="checkoutAddress">ডেলিভারি ঠিকানা</label>
+                    <textarea id="checkoutAddress" required placeholder="আপনার সম্পূর্ণ ঠিকানা লিখুন"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-cancel" onclick="closeCheckoutModal()">বাতিল</button>
+                    <button type="submit" class="btn-confirm">অর্ডার নিশ্চিত করুন</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div id="successModal" class="modal-overlay success-modal" onclick="closeSuccessModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="text-2xl font-bold">✅ অর্ডার সফল!</h2>
+            <button class="modal-close" onclick="closeSuccessModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="success-icon">✅</div>
+            <h2>ধন্যবাদ!</h2>
+            <p>আপনার অর্ডার সফলভাবে প্রাপ্ত হয়েছে।</p>
+            <button class="btn-whatsapp" onclick="sendWhatsApp()">
+                💬 WhatsApp এ পাঠান
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN SCRIPT -->
+
+<script>
+
+// ======================= PRODUCTS DATA =======================
+const productsData = [
+    {
+        id: 1,
+        name: 'চাল',
+        quantity: '৫ কেজি',
+        price: 450,
+        image: 'https://images.unsplash.com/photo-1586190936829-37d7a6dd4e90?q=80&w=400'
+    },
+    {
+        id: 2,
+        name: 'তেল',
+        quantity: '২ লিটার',
+        price: 380,
+        image: 'https://images.unsplash.com/photo-1587734314820-3bc4f0db9c8d?q=80&w=400'
+    },
+    {
+        id: 3,
+        name: 'ডাল',
+        quantity: '১ কেজি',
+        price: 140,
+        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400'
+    }
+];
+
+const DELIVERY_CHARGE = 60;
+
+// ======================= STATE =======================
+let allProducts = productsData;
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let orderData = null;
+
+// ======================= INITIALIZATION =======================
+document.addEventListener('DOMContentLoaded', () => {
+    displayProducts(allProducts);
+    updateCartCount();
+});
+
+// ======================= DISPLAY PRODUCTS =======================
+function displayProducts(products){
+    let html = "";
+    
+    products.forEach((data, index) => {
+        html += `
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden product-card-animated hover:shadow-2xl transition transform hover:scale-105" style="animation-delay: ${index * 0.1}s">
+                <img
+                    src="${data.image}"
+                    class="w-full h-64 object-cover"
+                    onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(data.name)}'">
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold mb-2">
+                        ${data.name}
+                    </h3>
+                    <p class="text-gray-600 mb-3">
+                        ${data.quantity}
+                    </p>
+                    <p class="text-green-700 text-3xl font-bold mb-5">
+                        ৳ ${data.price}
+                    </p>
+                    <button
+                        onclick="addToCart(${data.id}, '${data.name}', '${data.quantity}', ${data.price})"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl font-bold transition transform hover:scale-105">
+                        🛒 কার্টে যোগ করুন
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    document.getElementById("productContainer").innerHTML = html;
+}
+
+// ======================= SEARCH PRODUCTS =======================
+function searchProducts(){
+    const searchValue = document.getElementById("searchInput").value.toLowerCase();
+    const filteredProducts = allProducts.filter(product =>
+        product.name.toLowerCase().includes(searchValue)
+    );
+    displayProducts(filteredProducts);
+}
+
+// ======================= ADD TO CART =======================
+function addToCart(id, name, quantity, price){
+    cart.push({
+        id,
+        name,
+        quantity,
+        price,
+        image: allProducts.find(p => p.id === id).image
+    });
+    
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    
+    // Show feedback
+    alert(name + " কার্টে যোগ হয়েছে");
+}
+
+// ======================= UPDATE CART COUNT =======================
+function updateCartCount(){
+    document.getElementById("cart-count").innerText = cart.length;
+}
+
+// ======================= CART MODAL =======================
+function openCartModal(){
+    updateCartModalContent();
+    document.getElementById("cartModal").classList.add("active");
+}
+
+function closeCartModal(event){
+    if(event && event.target.id !== 'cartModal') return;
+    document.getElementById("cartModal").classList.remove("active");
+}
+
+function updateCartModalContent(){
+    const cartBody = document.getElementById("cartModalBody");
+    const cartFooter = document.getElementById("cartModalFooter");
+    
+    if(cart.length === 0){
+        cartBody.innerHTML = `
+            <div class="empty-cart-message">
+                <div class="empty-cart-icon">🛒</div>
+                <p>আপনার কার্ট খালি</p>
+            </div>
+        `;
+        cartFooter.innerHTML = '';
+        return;
+    }
+    
+    let html = '';
+    let subtotal = 0;
+    
+    cart.forEach((item, index) => {
+        subtotal += item.price;
+        html += `
+            <div class="cart-item-modal">
+                <div class="cart-item-info">
+                    <h3>${item.name}</h3>
+                    <p>${item.quantity}</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="cart-item-price">৳${item.price}</span>
+                    <button
+                        onclick="removeFromCart(${index})"
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition">
+                        ✕
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    const total = subtotal + DELIVERY_CHARGE;
+    
+    cartBody.innerHTML = html;
+    cartFooter.innerHTML = `
+        <div class="price-summary">
+            <div class="price-row">
+                <span>সাবটোটাল:</span>
+                <span>৳${subtotal}</span>
+            </div>
+            <div class="price-row">
+                <span>ডেলিভারি চার্জ:</span>
+                <span>৳${DELIVERY_CHARGE}</span>
+            </div>
+            <div class="price-row total">
+                <span>মোট:</span>
+                <span>৳${total}</span>
+            </div>
+        </div>
+        <button
+            onclick="openCheckoutModal()"
+            class="btn-modal btn-checkout-modal"
+            ${cart.length === 0 ? 'disabled' : ''}>
+            চেকআউট করুন
+        </button>
+    `;
+}
+
+// ======================= REMOVE FROM CART =======================
+function removeFromCart(index){
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    updateCartModalContent();
+}
+
+// ======================= CHECKOUT MODAL =======================
+function openCheckoutModal(){
+    closeCartModal({target: {id: 'cartModal'}});
+    document.getElementById("checkoutModal").classList.add("active");
+}
+
+function closeCheckoutModal(event){
+    if(event && event.target.id !== 'checkoutModal') return;
+    document.getElementById("checkoutModal").classList.remove("active");
+}
+
+// ======================= SUBMIT ORDER =======================
+function submitOrder(event){
+    event.preventDefault();
+    
+    if(cart.length === 0){
+        alert("কার্ট খালি");
+        return;
+    }
+    
+    const name = document.getElementById("checkoutName").value.trim();
+    const phone = document.getElementById("checkoutPhone").value.trim();
+    const address = document.getElementById("checkoutAddress").value.trim();
+    
+    if(!name || !phone || !address){
+        alert("সব তথ্য পূরণ করুন");
+        return;
+    }
+    
+    if(!/^01[0-9]{9}$/.test(phone)){
+        alert("সঠিক মোবাইল নাম্বর দিন (যেমন: 01700000000)");
+        return;
+    }
+    
+    // Calculate totals
+    const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+    const total = subtotal + DELIVERY_CHARGE;
+    
+    orderData = {
+        id: Date.now(),
+        name,
+        phone,
+        address,
+        cart: cart.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price
+        })),
+        subtotal,
+        delivery: DELIVERY_CHARGE,
+        total,
+        timestamp: new Date().toLocaleString('bn-BD'),
+        status: 'Pending'
+    };
+    
+    // Save to admin panel
+    saveOrder();
+    
+    closeCheckoutModal({target: {id: 'checkoutModal'}});
+    document.getElementById("successModal").classList.add("active");
+}
+
+// ======================= SAVE ORDER =======================
+function saveOrder(){
+    let orders = JSON.parse(localStorage.getItem('fastGroceryOrders') || '[]');
+    orders.push(orderData);
+    localStorage.setItem('fastGroceryOrders', JSON.stringify(orders));
+}
+
+// ======================= SUCCESS MODAL =======================
+function closeSuccessModal(event){
+    if(event && event.target.id !== 'successModal') return;
+    document.getElementById("successModal").classList.remove("active");
+}
+
+// ======================= WHATSAPP =======================
+function sendWhatsApp(){
+    if(!orderData) return;
+    
+    const message = generateWhatsAppMessage();
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappPhone = orderData.phone.replace(/^0/, '880');
+    const whatsappURL = `https://wa.me/${whatsappPhone}?text=${encodedMessage}`;
+    
+    window.open(whatsappURL, '_blank');
+    
+    // Reset
+    setTimeout(() => {
+        cart = [];
+        localStorage.removeItem("cart");
+        updateCartCount();
+        document.getElementById("checkoutForm").reset();
+        closeSuccessModal({target: {id: 'successModal'}});
+    }, 500);
+}
+
+function generateWhatsAppMessage(){
+    let message = '🛒 FAST_Grocery Order\n\n';
+    message += `👤 Name: ${orderData.name}\n`;
+    message += `📞 Phone: ${orderData.phone}\n`;
+    message += `📍 Address:\n${orderData.address}\n\n`;
+    message += '━━━━━━━━━━\n\n';
+    
+    orderData.cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.name}\n৳${item.price}\n\n`;
+    });
+    
+    message += '━━━━━━━━━━\n\n';
+    message += `Subtotal: ৳${orderData.subtotal}\n`;
+    message += `Delivery Charge: ৳${orderData.delivery}\n`;
+    message += `Grand Total: ৳${orderData.total}`;
+    
+    return message;
+}
+
+// ======================= DARK MODE =======================
+function toggleDarkMode(){
+    document.body.classList.toggle("dark-mode");
+}
+
+// ======================= KEYBOARD SHORTCUTS =======================
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+        closeCartModal({target: {id: 'cartModal'}});
+        closeCheckoutModal({target: {id: 'checkoutModal'}});
+        closeSuccessModal({target: {id: 'successModal'}});
+    }
+});
+
+</script>
 
 </body>
 </html>
